@@ -1,0 +1,42 @@
+{% extends 'mailapp/base.html' %}
+
+{% block content %}
+
+<div class="mb-3">
+    <a href="{% url 'mailapp:message_create' %}" class="w-100 btn btn-lg btn-outline-primary">Создать сообщение</a>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+
+
+    {% for object in object_list %}
+
+    <div class="col-4">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">{{ object.letter_subject }}</h4>
+            </div>
+            <div class="card-body">
+
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>Текст сообщения: {{ object.body }}</li>
+
+                </ul>
+                {% if perms.mailapp.can_delete_newsletter and perms.mailapp.can_view_newsletter or user == letter.owner %}
+                <a href="{% url 'mailapp:message_update'  object.pk %}" type="button"
+                   class="w-100 btn btn-lg btn-outline-primary">Редактировать</a>
+                {% endif %}
+
+
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'mailapp:message_delete'  object.pk %}" type="button"
+                   class="w-100 btn btn-lg btn-outline-primary">Удалить</a>
+            </div>
+
+        </div>
+    </div>
+
+    {% endfor%}
+</div>
+{% endblock %}
