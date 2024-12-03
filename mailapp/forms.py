@@ -8,30 +8,30 @@ class StyleFormMixin:
         super().__init__(*args, **kwargs)
         for fild_name, fild in self.fields.items():
             if isinstance(fild, BooleanField):
-                fild.widget.attrs['class'] = "form-check-input"
+                fild.widget.attrs["class"] = "form-check-input"
             else:
-                fild.widget.attrs['class'] = "form-control"
+                fild.widget.attrs["class"] = "form-control"
 
 
 class NewsLetterForm(StyleFormMixin, ModelForm):
     class Meta:
         model = NewsLetter
-        fields = '__all__'
+        fields = "__all__"
 
 
 class NewsLetterModeratorForm(StyleFormMixin, ModelForm):
     class Meta:
         model = NewsLetter
-        exclude = ('owner', 'count')
+        exclude = ("owner", "count")
 
 
 class MessageForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Message
-        fields = '__all__'
+        fields = "__all__"
 
 
 class ClientForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Client
-        fields = '__all__'
+        fields = "__all__"
