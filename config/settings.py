@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'mailapp',
-    'django_apscheduler',
-    'users',
+    "mailapp",
+    "django_apscheduler",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -78,12 +78,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'coursework6_f ',
-        'USER': 'postgres',
-        'PASSWORD': '2468',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "coursework6_f ",
+        "USER": "postgres",
+        "PASSWORD": "2468",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
 
