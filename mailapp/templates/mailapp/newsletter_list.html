@@ -1,0 +1,54 @@
+{% extends 'mailapp/base.html'%}
+{% block content %}
+
+<div class="container">
+    <p><a class="btn btn-primary btn-lg" href="{% url 'mailapp:letter_create' %}" role="button">Создать рассылку &raquo;</a></p>
+    <div class="row">
+
+        {% for letter in object_list %}
+        <div class="col-md-4">
+            <h2>{{ letter.name }}</h2>
+
+            <p class="card-text">{{letter.message}}</p>
+            <p><a class="btn btn-success " href="{% url 'mailapp:letter_detail' letter.pk %}" role="button">Посмотреть &raquo;</a></p>
+            {% if perms.mailapp.can_delete_newsletter and perms.mailapp.can_view_newsletter or user == letter.owner %}
+            <p><a class="btn btn-warning " href="{% url 'mailapp:letter_update' letter.pk %}" role="button">Редактировать &raquo;</a></p>
+            {% endif %}
+            <p><a class="btn btn-secondary " href="{% url 'mailapp:letter_delete' letter.pk %}" role="button">Удалить &raquo;</a></p>
+        </div>
+
+        {% endfor %}
+    </div>
+
+<div class=".col-md-4 .ml-auto">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Статистика:</h5>
+          <p class="card-text">количество рассылок всего {{total_newsletters}}</p>
+            <p>количество активных рассылок {{active_newsletters}}</p>
+              <p>количество уникальных клиентов для рассылок {{unique_clients}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="container px-4 py-5">
+        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+            <div class="fs-2 text-body-emphasis">
+                <h2>Статьи из блога</h2>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for post in random_posts %}
+                    <li class="list-group-item">
+                        <h3>{{ post.title }}</h3>
+                        <p>{{ post.content|truncatewords:20 }}</p>
+                        <a class="btn btn-primary" href="{% url 'blog:blog_detail' post.id %}">Читать далее</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+
+{% endblock %}

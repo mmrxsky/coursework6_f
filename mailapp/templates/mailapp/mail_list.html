@@ -1,0 +1,16 @@
+{% extends 'mailapp/base.html'%}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        {% for letter in letters %}
+        <div class="col-md-4">
+            <h2>Рассылка</h2>
+            <p> {{ letter.status }}</p>
+            <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+        </div>
+        {% endfor %}
+    </div>
+    <hr>
+</div>
+{% endblock %}

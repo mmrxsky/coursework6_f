@@ -1,0 +1,18 @@
+{% extends 'mailapp/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <p> Хотите удалить "{{ object.status }}"?</p>
+                    <button type="submit" class="btn btn-danger">Подтвердить</button>
+                    <a class="btn btn-primary" href="{% url 'mailapp:letter_list'%}" role="button">Назад</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
