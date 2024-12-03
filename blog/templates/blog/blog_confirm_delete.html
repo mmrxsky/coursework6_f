@@ -1,0 +1,20 @@
+{% extends 'mailapp/base.html' %}
+
+{% block content %}
+    <div class="col-12">
+        <div class="row">
+            <div class="col-2">
+                <div class="card">
+                    <div class="card-body">
+                        <form method='post'>
+                            {% csrf_token %}
+                            <p>Хотите удалить "{{object.title}}"?</p>
+                            <button type="submit" class="btn btn-danger">Подтвердить</button>
+                            <a class="btn btn-primary" href="{% url 'blog:blog_list' %}" role="button">Назад</a>
+                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
