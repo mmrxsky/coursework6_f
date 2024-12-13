@@ -4,9 +4,11 @@ from datetime import datetime, timedelta
 import pytz
 from django.conf import settings
 from django.core.mail import send_mail
+from django_apscheduler.jobstores import DjangoJobStore
+from django_apscheduler.models import DjangoJobExecution
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from mailapp.models import NewsLetter, Message, Attempt
-from apscheduler.schedulers.background import BackgroundScheduler
 
 
 def send_newsletter_email(objects):
@@ -69,12 +71,55 @@ def send_newsletter_periodic_email():
             obj.save()
 
 
+def delete_old_job_executions(max_age=604_800):
+    """
+    Удаляет записи о выполнении заданий старше max_age секунд.
+    """
+    DjangoJobExecution.objects.delete_old_job_executions(max_age)
+
+
 def start_scheduler():
-    scheduler = BackgroundScheduler()
+    try:
+        scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
+        scheduler.add_jobstore(DjangoJobStore(), "default")
+        
+        # Проверка, не добавлена ли уже задача
+        if not scheduler.get_jobs():
+            # Добавьте задание на ежеминутную проверку новостных рассылок
+            scheduler.add_job(
+                send_newsletter_periodic_email,
+                'interval',
+                minutes=1,
+                id='newsletter_job',
+                name='Отправка новостных рассылок',
+                replace_existing=True
+            )
+            
+            # Добавляем задание по очистке старых записей выполнения
+            scheduler.add_job(
+                delete_old_job_executions,
+                trigger='cron',
+                day_of_week='mon',
+                hour='00',
+                minute='00',
+                id='delete_old_job_executions',
+                max_instances=1,
+                replace_existing=True
+            )
+        
+        if not scheduler.running:
+            scheduler.start()
+            print("[*] Планировщик рассылок успешно запущен!")
+    except Exception as e:
+        print(f"[!] Ошибка запуска планировщика: {str(e)}")
 
-    # Проверка, добавлена ли задача уже
-    if not scheduler.get_jobs():
-        scheduler.add_job(send_newsletter_periodic_email, "interval", seconds=3600)
 
-    if not scheduler.running:
-        scheduler.start()
+# Обработчик выключения для полного выключения планировщика
+def shutdown_scheduler():
+    try:
+        scheduler = BackgroundScheduler()
+        if scheduler.running:
+            scheduler.shutdown(wait=False)
+            print("[*] Планировщик рассылок успешно остановлен!")
+    except Exception as e:
+        print(f"[!] Ошибка остановки планировщика: {str(e)}")

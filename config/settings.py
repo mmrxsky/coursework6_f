@@ -138,7 +138,24 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR / "media")
 
-APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+# APScheduler settings
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Формат даты и времени
+SCHEDULER_DEFAULT = True  # Автозапуск планировщика
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Тайм-аут для выполнения заданий (в секундах)
+
+# Настройки Django APScheduler
+SCHEDULER_CONFIG = {
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:DjangoJobStore"
+    },
+    "apscheduler.executors.default": {
+        "class": "apscheduler.executors.pool:ThreadPoolExecutor",
+        "max_workers": "20"
+    },
+    "apscheduler.job_defaults.coalesce": "false",
+    "apscheduler.job_defaults.max_instances": "1",
+    "apscheduler.timezone": TIME_ZONE,
+}
 
 AUTH_USER_MODEL = "users.User"
 
